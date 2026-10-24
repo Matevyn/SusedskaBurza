@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <title>Susedská Výpomoc</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #eee; }
+        button { padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test prepojenia Susedskej burzy</h1>
+    <button onclick="nacitajData()">Načítať dáta z DB</button>
+    <div id="vysledok"></div>
+
+    <script>
+        async function nacitajData() {
+            const divVysledok = document.getElementById('vysledok');
+            divVysledok.innerHTML = "Načítavam dáta z backendu...";
+
+            try {
+                // Frontend sa pýta tvojho bežiaceho FastAPI backendu
+                const odpoved = await fetch('http://127.0.0.1:8000/api/tabulka');
+                const json = await odpoved.json();
+
+                // Ak backend vrátil chybovú hlášku (napr. zlý firewall na Azure)
+                if (json.chyba) {
+                    divVysledok.innerHTML = `<p style="color:red">Chyba databázy: ${json.chyba}</p>`;
+                    return;
+                }
+
+                const data = json.data;
+                if (data.length === 0) {
+                    divVysledok.innerHTML = "<p>Tabuľka je prázdna.</p>";
+                    return;
+                }
+
+                // Skladáme HTML tabuľku
+                let html = '<table><tr>';
+                // Vygenerujeme hlavičku podľa názvu stĺpcov z databázy
+                for (let kluc in data[0]) {
+                    html += `<th>${kluc}</th>`;
+                }
+                html += '</tr>';
+
+                // Vygenerujeme riadky
+                data.forEach(riadok => {
+                    html += '<tr>';
+                    for (let kluc in riadok) {
+                        html += `<td>${riadok[kluc]}</td>`;
+                    }
+                    html += '</tr>';
+                });
+                html += '</table>';
+
+                divVysledok.innerHTML = html;
+
+            } catch (chyba) {
+                divVysledok.innerHTML = `<p style="color:red">Nepodarilo sa spojiť s backendom. Beží ti Uvicorn?</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
