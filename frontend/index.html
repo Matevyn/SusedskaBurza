@@ -23,7 +23,7 @@
 
             try {
                 // Frontend sa pýta tvojho bežiaceho FastAPI backendu
-                const odpoved = await fetch('http://127.0.0.1:8000/api/tabulka');
+                const odpoved = await fetch('https://susedskaburza-web-fxfgetbzb4dcfmbh.swedencentral-01.azurewebsites.net/api/tabulka');
                 const json = await odpoved.json();
 
                 // Ak backend vrátil chybovú hlášku (napr. zlý firewall na Azure)
