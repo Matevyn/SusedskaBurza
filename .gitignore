@@ -1,2 +1,22 @@
+# macOS
 .DS_Store
+
+# Environment súbor s heslami
 .env
+
+# Záloha .env (heslá!)
+.env.backup
+
+# Python virtuálne prostredie
+venv/
+ENV/
+env/
+.venv/
+
+# Node.js závislosti
+node_modules/
+
+# Python kompilaé súbory
+__pycache__/
+*.py[cod]
+*.egg-info/
