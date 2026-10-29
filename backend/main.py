@@ -2,14 +2,21 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 import os
 import pymssql
+from dotenv import load_dotenv
+
+# Načíta premenné prostredia z .env súboru (ak existuje)
+load_dotenv()
 
 app = FastAPI()
 
 # --- PREPOJENIE NA DATABÁZU ---
-DB_SERVER = os.getenv("DB_SERVER", "skolsky-projekt.database.windows.net")
-DB_USER = os.getenv("DB_USER", "matus")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "")  # Na Azure sa berie z Environment Variables
-DB_NAME = os.getenv("DB_NAME", "SusedskaBurza")
+# Všetky hodnoty MUSIA byť nastavené ako environment premenné
+# lokálne cez .env, na Azure cez App Service → Environment variables
+DB_SERVER = os.environ["DB_SERVER"]
+DB_USER = os.environ["DB_USER"]
+DB_PASSWORD = os.environ["DB_PASSWORD"]
+DB_NAME = os.environ["DB_NAME"]
+
 
 def get_db_data():
     try:
@@ -18,10 +25,9 @@ def get_db_data():
             user=DB_USER,
             password=DB_PASSWORD,
             database=DB_NAME,
-            as_dict=True
+            as_dict=True,
         )
         cursor = conn.cursor()
-        # Názov tvojej tabuľky v databáze
         cursor.execute("SELECT TOP 50 * FROM Users;")
         rows = cursor.fetchall()
         conn.close()
@@ -37,15 +43,12 @@ def get_tabulka():
 
 
 # --- 2. ROUTA PRE FRONTEND (HTML STRÁNKA) ---
-
 @app.get("/")
 def serve_frontend():
-    # Zistíme cestu k adresáru, kde leží main.py (t.j. web/backend)
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    # Prejdeme o úroveň vyššie do 'web' a potom do 'frontend/index.html'
     index_path = os.path.abspath(os.path.join(base_dir, "..", "web", "frontend", "index.html"))
-    
+
     if os.path.exists(index_path):
         return FileResponse(index_path)
-    
-    return {"chyba": f"Súbor index.html sa nenašiel na ceste: {index_path}"}# redeploy trigger
+
+    return {"chyba": f"Súbor index.html sa nenašiel na ceste: {index_path}"}
