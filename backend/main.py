@@ -22,7 +22,7 @@ def get_db_data():
         )
         cursor = conn.cursor()
         # Názov tvojej tabuľky v databáze
-        cursor.execute("SELECT TOP 50 * FROM Uzivatelia;") 
+        cursor.execute("SELECT TOP 50 * FROM Uzivatelia;")
         rows = cursor.fetchall()
         conn.close()
         return {"data": rows}
