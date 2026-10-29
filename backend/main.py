@@ -43,7 +43,7 @@ def serve_frontend():
     # Zistíme cestu k adresáru, kde leží main.py (t.j. web/backend)
     base_dir = os.path.dirname(os.path.abspath(__file__))
     # Prejdeme o úroveň vyššie do 'web' a potom do 'frontend/index.html'
-    index_path = os.path.abspath(os.path.join(base_dir, "..", "frontend", "index.html"))
+    index_path = os.path.abspath(os.path.join(base_dir, "..", "web", "frontend", "index.html"))
     
     if os.path.exists(index_path):
         return FileResponse(index_path)
