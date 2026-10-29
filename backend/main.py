@@ -48,4 +48,4 @@ def serve_frontend():
     if os.path.exists(index_path):
         return FileResponse(index_path)
     
-    return {"chyba": f"Súbor index.html sa nenašiel na ceste: {index_path}"}
+    return {"chyba": f"Súbor index.html sa nenašiel na ceste: {index_path}"}# redeploy trigger
