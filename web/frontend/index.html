@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Susedská Výpomoc</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #eee; }
+        button { padding: 10px 15px; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <h1>Susedská výpomoc</h1>
+    <button onclick="nacitajData()">Načítať dáta z DB</button>
+    <div id="vysledok"></div>
+
+    <script>
+        async function nacitajData() {
+            const divVysledok = document.getElementById('vysledok');
+            divVysledok.innerHTML = "<p>Načítavam dáta z databázy...</p>";
+
+            try {
+                // Voláme relatívnu cestu na vlastnom serveri
+                const odpoved = await fetch('/api/tabulka');
+                const json = await odpoved.json();
+                
+                if (json.chyba) {
+                    divVysledok.innerHTML = `<p style="color:red">Chyba: ${json.chyba}</p>`;
+                    return;
+                }
+
+                const data = json.data;
+                if (!data || data.length === 0) {
+                    divVysledok.innerHTML = "<p>Tabuľka je prázdna.</p>";
+                    return;
+                }
+
+                let html = '<table><tr>';
+                for (let kluc in data[0]) {
+                    html += `<th>${kluc}</th>`;
+                }
+                html += '</tr>';
+
+                data.forEach(riadok => {
+                    html += '<tr>';
+                    for (let kluc in riadok) {
+                        html += `<td>${riadok[kluc]}</td>`;
+                    }
+                    html += '</tr>';
+                });
+                html += '</table>';
+
+                divVysledok.innerHTML = html;
+
+            } catch (chyba) {
+                console.error(chyba);
+                divVysledok.innerHTML = `<p style="color:red">Nepodarilo sa spojiť so serverom.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,22 +1,19 @@
-# macOS
-.DS_Store
 
-# Environment súbor s heslami
-.env
-
-# Záloha .env (heslá!)
-.env.backup
-
-# Python virtuálne prostredie
+# Ignoruj virtuálne prostredie
 venv/
-ENV/
-env/
 .venv/
 
-# Node.js závislosti
-node_modules/
+# Ignoruj tajné hesla a lokálne nastavenia
+.env
+*.env*
 
-# Python kompilaé súbory
+# Ignoruj databázové dumpy a skripty
+*.sql
+
+# Ignoruj vygenerované mezipamäte Pythonu
 __pycache__/
-*.py[cod]
-*.egg-info/
+*.pyc
+
+# Ignoruj nastavenia editora a Git
+.vscode/
+.git/

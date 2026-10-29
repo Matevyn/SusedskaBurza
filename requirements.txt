@@ -1,6 +1,7 @@
 fastapi
 uvicorn
 pyodbc
+gunicorn
 sqlalchemy
 pymssql
 python-dotenv
